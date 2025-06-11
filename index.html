@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🔥 AI Roast Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://js.puter.com/v2/"></script>
+  <style>
+    body {
+      background: #121212;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #ff4d4d;
+    }
+    input, button {
+      padding: 12px;
+      margin: 10px auto;
+      font-size: 1em;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      background-color: #ff3333;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #roast-output {
+      margin-top: 20px;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      font-size: 1.2em;
+    }
+    .paypal-section {
+      margin-top: 40px;
+    }
+    footer {
+      margin-top: 60px;
+      color: #888;
+      font-size: 0.9em;
+    }
+    footer a {
+      color: #ff4d4d;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔥 AI Roast Generator</h1>
+  <input id="target" placeholder="Enter name or description to roast" />
+  <br>
+  <button onclick="generateRoast()">Roast Me</button>
+  <div id="roast-output"></div>
+
+  <div class="paypal-section">
+    <p>💀 Want savage mode? Unlock premium roasts for just $5:</p>
+    <div id="paypal-button-container"></div>
+  </div>
+
+  <script>
+    let premiumUnlocked = false;
+
+    function generateRoast() {
+      const input = document.getElementById('target').value;
+      if (!input) {
+        alert("Please enter something to roast!");
+        return;
+      }
+
+      const prompt = premiumUnlocked
+        ? `Roast this brutally, no mercy: ${input}`
+        : `Roast this playfully: ${input}`;
+
+      puter.ai.chat(prompt).then(response => {
+        document.getElementById('roast-output').innerText = response;
+      }).catch(err => {
+        document.getElementById('roast-output').innerText = "😵‍💫 AI failed to roast... try again!";
+        console.error(err);
+      });
+    }
+  </script>
+
+  <!-- PAYPAL INTEGRATION -->
+  <script src="https://www.paypal.com/sdk/js?client-id=AarfZkZYmJ8dpZBRp4WWPSDYSEBxa1dfVMmozP1enOElBNT8wGXJzM-hwhUt7BwWjxI4L3lmOvfdXsbq"></script>
+  <script>
+    paypal.Buttons({
+      createOrder: function(data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: { value: '5.00' }
+          }]
+        });
+      },
+      onApprove: function(data, actions) {
+        alert("✅ Savage Mode Activated!");
+        premiumUnlocked = true;
+      }
+    }).render('#paypal-button-container');
+  </script>
+
+  <footer>
+    Built by <a href="https://github.com/skyboss878" target="_blank">@skyboss878</a> | 🔗 
+    <a href="https://bit.ly/get-roasted" target="_blank">bit.ly/get-roasted</a>
+  </footer>
+</body>
+</html>

@@ -87,23 +87,40 @@
       });
     }
   </script>
-
+  
   <!-- PAYPAL INTEGRATION -->
-  <script src="https://www.paypal.com/sdk/js?client-id=AarfZkZYmJ8dpZBRp4WWPSDYSEBxa1dfVMmozP1enOElBNT8wGXJzM-hwhUt7BwWjxI4L3lmOvfdXsbq"></script>
-  <script>
-    paypal.Buttons({
-      createOrder: function(data, actions) {
-        return actions.order.create({
-          purchase_units: [{
-            amount: { value: '5.00' }
-          }]
-        });
-      },
-      onApprove: function(data, actions) {
-        alert("✅ Savage Mode Activated!");
+<script src="https://www.paypal.com/sdk/js?client-id=AarfZkZYmJ8dpZBRp4WWPSDYSEBxa1dfVMmozP1enOElBNT8wGXJzM-hwhUt7BwWjxI4L3lmOvfdXsbq&currency=USD"></script>
+
+<div id="paypal-button-container"></div>
+
+<script>
+  let premiumUnlocked = false;
+
+  paypal.Buttons({
+    createOrder: function(data, actions) {
+      return actions.order.create({
+        purchase_units: [{
+          amount: { value: '5.00' }
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        alert("✅ Savage Mode Activated by " + details.payer.name.given_name + "!");
         premiumUnlocked = true;
-      }
-    }).render('#paypal-button-container');
+        console.log("Transaction completed:", details);
+        // You can also send details to your backend here
+      });
+    },
+    onCancel: function (data) {
+      alert("❌ Payment was cancelled.");
+    },
+    onError: function (err) {
+      console.error("💥 PayPal Error:", err);
+      alert("An error occurred. Please try again.");
+    }
+  }).render('#paypal-button-container');
+</script>
   </script>
 
   <footer>
